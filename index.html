@@ -12,8 +12,8 @@
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: flex-start; /* Pastikan konten dimulai dari atas */
-    align-items: flex-start; /* Mengatur konten untuk berada di atas */
+    justify-content: center; /* Menjaga konten tetap di tengah horizontal */
+    align-items: flex-start; /* Mengatur konten agar tetap berada di atas */
     flex-direction: column;
     height: 100vh;
     overflow-x: hidden; /* Menghindari scroll horizontal */
@@ -32,19 +32,27 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000; /* Agar header berada di atas konten lainnya */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan agar header lebih menonjol */
+    z-index: 1000; /* Agar header tetap berada di atas konten lainnya */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan untuk header */
+    /* Menambahkan jarak bawah agar tidak menutupi konten */
 }
 
 .container {
     background-color: #fff;
     padding: 30px;
     width: 100%;
-    max-width: 600px;
+    max-width: 600px; /* Maksimal lebar kontainer 600px di desktop */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    margin-top: 120px; /* Memberikan ruang untuk header fixed */
+    margin-top: 150px; /* Memberikan ruang yang cukup untuk header */
+    margin-left: auto; /* Menjaga agar konten berada di tengah horizontal */
+    margin-right: auto; /* Menjaga agar konten berada di tengah horizontal */
+    position: relative; /* Menjaga container tetap berada di tempat */
+    z-index: 900; /* Pastikan konten berada di bawah header */
+    flex-grow: 1; /* Agar konten container tumbuh secara otomatis */
+    max-height: 80vh; /* Membatasi tinggi maksimal untuk menghindari konten meluap */
+    overflow-y: auto; /* Menambahkan scroll jika konten lebih tinggi dari 80vh */
 }
 
 h1 {
@@ -153,12 +161,36 @@ button:hover {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
-    margin-top: 20px;
+    margin-top: 5px;
     font-size: 14px;
     color: #555;
     box-sizing: border-box;
+    max-height: 300px; /* Batasi tinggi untuk deskripsi produk jika diperlukan */
+    overflow-y: auto; /* Tambahkan scroll jika deskripsi terlalu panjang */
 }
 
+/* Responsif untuk perangkat mobile */
+@media screen and (max-width: 768px) {
+    body {
+        justify-content: flex-start; /* Menjaga konten dimulai dari atas */
+    }
+
+    .container {
+        padding: 15px; /* Mengurangi padding untuk perangkat kecil */
+        margin-top: 80px; /* Mengurangi margin-top pada perangkat kecil */
+        width: 90%; /* Lebar kontainer 90% pada perangkat kecil */
+    }
+
+    .header {
+        font-size: 24px; /* Mengurangi ukuran font header pada mobile */
+        padding: 12px 0;
+    }
+
+    .left-button {
+        top: 20px; /* Menyesuaikan posisi tombol kiri pada mobile */
+        left: 15px;
+    }
+}
 
     </style>    
 </head>
