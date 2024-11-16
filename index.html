@@ -102,15 +102,54 @@
             background-color: #29cf00;
         }
 
-        .whatsapp-logo {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
+        /* Kontainer untuk tombol "Beli Sekarang" dan WhatsApp */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* Jarak antar tombol */
+        }
+
+        /* Tombol WhatsApp */
+        .whatsapp-button {
+            background-color: #25D366;
+            color: white;
+            font-size: 14px;
             cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 12px 15px;
+            border-radius: 20px;
+            text-align: center;
+            border: none;
+            text-transform: uppercase;
+            flex: 1;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #128C7E;
+        }
+
+        /* Tombol Beli Sekarang */
+        .buy-button {
+            background-color: #2114d6;
+            color: white;
+            font-size: 14px;
+            font-weight: normal;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 6px 15px;
+            border-radius: 20px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .buy-button:hover {
+            background-color: #29cf00;
+        }
+
+        /* Styling untuk tombol yang dipilih (method yang sudah dipilih) */
+        .selected-payment {
+            background-color: #29cf00; /* Warna hijau saat dipilih */
+            color: white; /* Warna teks putih */
+            border: 1px solid #29cf00; /* Border yang konsisten dengan warna hijau */
         }
 
         /* Responsif untuk perangkat mobile */
@@ -125,6 +164,29 @@
                 font-size: 24px;
                 padding: 12px 0;
             }
+        }
+        #productPrice {
+            font-size: 20px; /* Ukuran font lebih besar */
+            font-weight: bold; /* Membuat teks lebih tebal */
+            color: #FF6347; /* Memberi warna yang mencolok (misalnya, merah tomat) */
+            background-color: #FFF8DC; /* Memberikan latar belakang sedikit kuning untuk kontras */
+            padding: 10px; /* Memberi padding untuk jarak antara teks dan batas */
+            border-radius: 8px; /* Memberikan sudut yang melengkung */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Memberikan bayangan halus di sekitar harga */
+            margin-top: 15px; /* Menambahkan jarak antara harga dan elemen lainnya */
+            text-align: center; /* Menempatkan harga di tengah */
+        }
+
+        /* Styling untuk deskripsi produk */
+        #productDescription {
+            font-size: 16px; /* Ukuran font standar untuk deskripsi */
+            color: #555; /* Warna teks abu-abu untuk deskripsi */
+            line-height: 1.6; /* Jarak antar baris yang nyaman dibaca */
+            padding: 15px; /* Memberikan jarak dalam deskripsi */
+            background-color: #f9f9f9; /* Latar belakang yang lebih terang */
+            border-radius: 8px; /* Sudut melengkung */
+            box-sizing: border-box;
+            margin-top: 10px; /* Memberikan jarak antara deskripsi dan elemen lainnya */
         }
     </style>
 </head>
@@ -182,16 +244,19 @@
 
         <!-- Input No HP -->
         <div class="section">
-            <label for="phone">Nomor HP (WA):</label>
-            <input type="text" id="phone" placeholder="Masukkan Nomor HP (WA)">
+            <label for="phone">Nomor Tujuan:</label>
+            <input type="text" id="phone" placeholder="Nomor Tujuan">
         </div>
 
-        <!-- Tombol Submit -->
-        <button onclick="submitForm()">Beli Sekarang</button>
-    </div>
+        <!-- Kontainer Tombol Beli dan WhatsApp -->
+        <div class="button-container">
+            <!-- Tombol Beli Sekarang -->
+            <button class="buy-button" onclick="submitForm()">Beli Sekarang</button>
 
-    <!-- Logo WhatsApp -->
-    <img src="whatsapp.png" alt="WhatsApp" class="whatsapp-logo" onclick="redirectToWhatsAppGroup()">
+            <!-- Tombol WhatsApp -->
+            <button class="whatsapp-button" onclick="redirectToWhatsAppGroup()">Chat via WhatsApp</button>
+        </div>
+    </div>
 
     <script>
         let isInfoVisible = true;
@@ -420,7 +485,7 @@
         const subcategoryDescription = document.getElementById('subcategoryDescription');
         const paymentSection = document.getElementById('paymentSection');
         const paymentList = document.getElementById('paymentList');
-        let selectedPaymentMethod = '';
+        let selectedPaymentMethod = null;
 
         categorySelect.addEventListener('change', function() {
             const category = this.value;
@@ -436,6 +501,7 @@
                 Object.keys(subcategories).forEach(subcategory => {
                     const option = document.createElement('option');
                     option.value = subcategory;
+                    // Mengganti "_" dengan spasi pada subkategori
                     option.textContent = subcategory.replace(/_/g, ' ');
                     subcategorySelect.appendChild(option);
                 });
@@ -445,6 +511,7 @@
             }
         });
 
+        // Update event listener untuk subkategori dan produk
         subcategorySelect.addEventListener('change', function() {
             const category = categorySelect.value;
             const subcategory = this.value;
@@ -463,6 +530,7 @@
                     productSelect.appendChild(option);
                 });
 
+                // Menampilkan deskripsi subkategori
                 const subcategoryInfo = subcategoryProducts[0].subcategoryDescription;
                 subcategoryDescription.innerHTML = subcategoryInfo;
                 productSelect.disabled = false;
@@ -471,6 +539,7 @@
             }
         });
 
+        // Update event listener untuk produk
         productSelect.addEventListener('change', function() {
             const category = categorySelect.value;
             const subcategory = subcategorySelect.value;
@@ -483,11 +552,14 @@
                 const subcategoryProducts = products[category].subcategories[subcategory];
                 const product = subcategoryProducts.find(p => p.code === productCode);
                 if (product) {
+                    // Menampilkan harga produk dengan styling khusus
                     productPrice.innerHTML = product.price;
                     productDescription.innerHTML = product.description;
                     productDescription.style.display = 'block';
                     paymentSection.style.display = 'block';
                     paymentList.innerHTML = '';
+
+                    // Menampilkan metode pembayaran
                     product.paymentMethods.forEach(method => {
                         const button = document.createElement('button');
                         button.textContent = method;
@@ -501,7 +573,11 @@
 
         function selectPaymentMethod(method, button) {
             selectedPaymentMethod = method;
+
+            // Menghapus kelas 'selected-payment' dari semua tombol
             document.querySelectorAll('.payment-button').forEach(btn => btn.classList.remove('selected-payment'));
+
+            // Menambahkan kelas 'selected-payment' ke tombol yang dipilih
             button.classList.add('selected-payment');
         }
 
@@ -521,19 +597,22 @@
             const perintah = selectedProduct ? selectedProduct.perintah : '';
 
             let message;
+
+            // Cek apakah payment method ada
             if (selectedPaymentMethod !== 'tidak') {
+                // Gabungkan parameter dengan titik satu kali, pastikan tidak ada titik ganda
                 message = `${perintah} ${productCode}.${phone}.${selectedPaymentMethod}`;
             } else {
+                // Jika payment method tidak dipilih, hanya gabungkan perintah, kode produk, dan nomor tujuan
                 message = `${perintah} ${productCode}.${phone}`;
             }
 
-            const phoneNumber = '6287717272676';
+            const phoneNumber = '6287717272676';  // Ganti dengan nomor WhatsApp yang sesuai
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
             window.open(whatsappURL, '_blank');
         }
 
-        // Fungsi untuk mengarahkan ke grup WhatsApp
         function redirectToWhatsAppGroup() {
             const groupLink = "https://chat.whatsapp.com/your-group-link"; // Ganti dengan link grup WhatsApp kamu
             window.open(groupLink, '_blank');
